@@ -1,7 +1,7 @@
 # Interactive 3D Brain Viewer
-AI slop readme aah, took like 3 hours to add that brain, still ongoing project.
 
 An interactive 3D brain simulator that allows users to click on brain regions to learn about their functions.
+https://www.brainfacts.org/3d-brain#intro=true
 
 ## 🚀 Quick Start
 
@@ -253,24 +253,6 @@ function animateToRegion(camera, controls, targetPosition) {
 }
 ```
 
-## 📊 Data Sources
-
-### Free Brain Model Resources:
-
-1. **BrainBrowser** - https://brainbrowser.cbrain.mcgill.ca
-2. **FreeSurfer** - https://surfer.nmr.mgh.harvard.edu
-3. **Allen Brain Atlas** - https://brain-map.org
-4. **Human Connectome Project** - https://www.humanconnectome.org
-5. **NIH 3D Print Exchange** - https://3dprint.nih.gov (search "brain")
-
-### Atlas Resources:
-
-- **SPM Anatomy Toolbox** - Probabilistic cytoarchitectonic maps
-- **JuBrain Atlas** - 3D probabilistic atlas
-- **Brainnetome Atlas** - 246 subregions
-
-## 🎓 Educational Enhancements
-
 ### Add Quiz Mode:
 
 ```javascript
@@ -301,40 +283,6 @@ function ComparisonView({ regions }) {
 }
 ```
 
-## 🐛 Common Issues & Solutions
-
-### Issue: Model not loading
-**Solution:** Check CORS headers. Host models on the same domain or configure CORS properly.
-
-### Issue: Slow performance
-**Solution:** 
-- Use `decimation` to reduce polygon count
-- Implement LOD (Level of Detail)
-- Use instancing for repeated geometries
-
-### Issue: Clicking doesn't work
-**Solution:** Ensure `pointer-events` are enabled on the mesh and raycasting is configured correctly.
-
-## 📱 Mobile Optimization
-
-```javascript
-// Detect mobile
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-// Reduce quality on mobile
-const meshQuality = isMobile ? 'low' : 'high';
-
-// Touch controls
-<OrbitControls
-  enableZoom={true}
-  enablePan={!isMobile}
-  touches={{
-    ONE: THREE.TOUCH.ROTATE,
-    TWO: THREE.TOUCH.DOLLY_PAN
-  }}
-/>
-```
-
 ## 🚀 Deployment
 
 ### Deploying to Vercel:
@@ -351,21 +299,133 @@ npm run build
 netlify deploy --prod --dir=dist
 ```
 
-## 📝 License
+## BRAIN STRUCTURE - REGIONS and PARTS
 
-MIT License - Feel free to use this for educational purposes!
+This 3D brain viewer implements a **clear hierarchical structure** with **REGIONS** and **PARTS**:
 
-## 🤝 Contributing
+### ⭐ Understanding the Structure
 
-Pull requests welcome! Areas for improvement:
-- More detailed anatomical data
-- Better region detection algorithms
-- Mobile touch controls
-- VR support
-- Multi-language support
+- **REGIONS** (6 total): Main brain regions that appear first
+- **PARTS**: Components within each REGION (3-6 parts per region)
+
+### 🧠 The 6 Main REGIONS:
+
+#### 1. **REGION: Cerebrum** (6 PARTS)
+   - Frontal Lobe
+   - Parietal Lobe
+   - Occipital Lobe
+   - Temporal Lobe
+   - Corpus Callosum
+   - Cerebral Cortex
+
+#### 2. **REGION: Limbic System** (4 PARTS)
+   - Hippocampus
+   - Amygdala
+   - Thalamus
+   - Hypothalamus
+
+#### 3. **REGION: Basal Ganglia** (5 PARTS)
+   - Caudate Nucleus
+   - Putamen
+   - Globus Pallidus
+   - Substantia Nigra
+   - Subthalamic Nucleus
+
+#### 4. **REGION: Midbrain** (2 PARTS)
+   - Colliculi (Superior and Inferior)
+   - Clusters of neurons important for reward and mood
+
+#### 5. **REGION: Hindbrain** (3 PARTS)
+   - Cerebellum
+   - Pons
+   - Medulla Oblongata
+
+#### 6. **REGION: Brainstem** (3 PARTS)
+   - Midbrain
+   - Pons
+   - Medulla Oblongata
 
 ---
 
-**Pro Tip:** Start with the simple geometric version to get your UI/UX right, then progressively enhance with real brain models and atlas data!
+### 📖 How to Navigate:
 
-ADD DESIKAN KILLIANY ATLAS FOR REGION INTEGRATION
+**Step 1:** View all 6 **REGIONS**
+- When you first open the app, you see all main REGIONS displayed in 3D
+- Each REGION is color-coded and labeled
+
+**Step 2:** Click a **REGION**
+- Click on any REGION (e.g., "Cerebrum")
+- The view switches to show ONLY the PARTS of that REGION
+- A gold badge shows you selected a REGION
+
+**Step 3:** Explore the **PARTS**
+- Click on any PART to see detailed information
+- Each PART shows:
+  - Description
+  - Functions
+  - Which REGION it belongs to
+
+**Step 4:** Go Back
+- Click "Back to Main Regions" to return to the REGIONS view
+
+---
+
+### 🎯 Visual Indicators:
+
+| Type | Color Badge | Border | Hover Effect |
+|------|------------|--------|--------------|
+| **REGION** | 🟡 Gold "REGION" label | Gold border (2px) | Highlighted with region info |
+| **PART** | ⚪ Gray "PART" label | Gray border (1px) | Highlighted with part info |
+
+---
+
+### ✨ Features:
+
+✅ **Clear Hierarchy**: REGIONS contain PARTS - no confusion
+✅ **Visual Distinction**: Gold for REGIONS, Gray for PARTS
+✅ **Smart Labels**: Hover to see type (REGION or PART)
+✅ **Count Display**: Each REGION shows how many PARTS it contains
+✅ **Interactive 3D**: Rotate, zoom, pan, and click to explore
+✅ **Detailed Info**: Each item has description and functions
+✅ **Easy Navigation**: Back button to return to REGIONS
+✅ **Realistic Shapes**: Organic brain-like geometries (no blocky boxes!)
+✅ **Responsive Design**: Adapts to desktop, tablet, and mobile screens
+✅ **Advanced Lighting**: Multiple light sources for realistic depth and shadows
+✅ **Smooth Animations**: Damped camera controls and hover effects
+
+### 🎨 Visual Improvements:
+
+**Realistic Brain Geometry:**
+- **Cerebrum**: Hemisphere shape with natural curvature
+- **Lobes**: Smooth rounded capsules and spheres
+- **Hippocampus**: Curved torus shape (like the real hippocampus!)
+- **Cerebellum**: Partial sphere mimicking wrinkled appearance
+- **Brainstem Parts**: Cylindrical tubes (pons, medulla)
+- **Basal Ganglia**: Clustered organic shapes
+- **Corpus Callosum**: Elongated capsule connecting hemispheres
+
+**Professional Lighting:**
+- Main directional light with shadows
+- Fill lights for depth perception
+- Hemisphere lighting for natural ambiance
+- Spot lights for dramatic effect
+- Color-tinted lights for visual interest
+
+**Responsive Layout:**
+- **Desktop** (>1200px): Side-by-side layout with full info panel
+- **Tablet** (968-1200px): Compact info panel, adjusted controls
+- **Mobile** (<968px): Stacked layout - 3D view on top, info below
+- **Small Mobile** (<480px): Optimized for tiny screens
+
+---
+
+### 🔍 Search & Filter:
+
+The structure makes it easy to:
+- Understand brain organization
+- Find specific structures quickly
+- Learn relationships between REGIONS and their PARTS
+- Study brain anatomy systematically
+
+**Note**: This viewer uses ONLY the custom hierarchical structure - no Desikan-Killiany atlas or other classification systems.
+
