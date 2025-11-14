@@ -411,6 +411,7 @@ function App() {
 
       {/* Info Panel Drawer */}
       <div className={`info-drawer ${isInfoPanelOpen ? 'info-drawer-open' : ''}`}>
+        <div className="info-drawer-handle"></div>
         <button className="info-drawer-close" onClick={() => setIsInfoPanelOpen(false)}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M18 6 6 18M6 6l12 12" />
