@@ -406,7 +406,7 @@ function App() {
 
       <div className={`info-panel ${isInfoPanelMinimized ? 'minimized' : ''}`}>
         <div className="panel-header">
-          {!isInfoPanelMinimized && <h2>🧠 Interactive Brain Explorer</h2>}
+          {!isInfoPanelMinimized && <h2>Interactive Brain Explorer</h2>}
           <button
             className="minimize-btn"
             onClick={() => setIsInfoPanelMinimized(!isInfoPanelMinimized)}
@@ -501,11 +501,11 @@ function App() {
 
             <p><strong>How to Navigate:</strong></p>
             <ul>
-              <li>🖱️ Left-click and drag to rotate</li>
-              <li>🔍 Scroll to zoom in/out</li>
-              {!showSubparts && <li>🎯 Click a <strong style={{ color: '#FFD700' }}>REGION</strong> to view its PARTS</li>}
-              {showSubparts && <li>📍 Click a <strong style={{ color: '#888' }}>PART</strong> to see details</li>}
-              {showSubparts && <li>← Use "Back to Main Regions" button to return</li>}
+              <li>Left-click and drag to rotate</li>
+              <li>Scroll to zoom in/out</li>
+              {!showSubparts && <li>Click a <strong style={{ color: '#FFD700' }}>REGION</strong> to view its PARTS</li>}
+              {showSubparts && <li>Click a <strong style={{ color: '#888' }}>PART</strong> to see details</li>}
+              {showSubparts && <li>Use "Back to Main Regions" button to return</li>}
             </ul>
 
             {!showSubparts && (
