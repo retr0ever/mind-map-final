@@ -137,6 +137,16 @@ body {
   color: #ffffff;
   letter-spacing: -0.5px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: brightness(1.1);
 }
 
 .breadcrumb-path {

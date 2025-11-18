@@ -1,98 +1,11 @@
 import { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Html, Environment } from '@react-three/drei';
+import { Environment } from '@react-three/drei';
 import './App.css';
 import { brainStructure, getMainRegions, getParts } from './data/brainStructure';
-import { createRealisticBrainGeometry, BrainMaterial } from './components/RealisticBrainGeometry';
+import { GltfBrainModel } from './components/GltfBrainModel';
+import { KeyboardOrbitControls } from './components/KeyboardOrbitControls';
 import { fetchRelevantLinks } from './services/perplexityService';
-
-// Wrapper component for realistic brain geometry
-function RealisticBrainMesh({ region, isHovered, isSelected }) {
-  const geometry = createRealisticBrainGeometry(region);
-
-  return (
-    <>
-      <primitive object={geometry} attach="geometry" />
-      <BrainMaterial region={region} isHovered={isHovered} isSelected={isSelected} />
-    </>
-  );
-}
-
-// Brain Model Component with hierarchical interaction and realistic shapes
-function BrainModel({ onRegionClick, selectedRegion, selectedMainRegion, showSubparts }) {
-  const [hovered, setHovered] = useState(null);
-
-  // Get rotation for specific regions to orient them properly
-  const getRotation = (id) => {
-    switch(id) {
-      case 'temporal_lobe':
-        return [0, 0, Math.PI / 2];
-      case 'corpus_callosum':
-        return [0, 0, Math.PI / 2];
-      case 'hippocampus':
-        return [Math.PI / 2, 0, 0];
-      case 'caudate_nucleus':
-        return [0, 0, Math.PI / 6];
-      case 'pons':
-      case 'brainstem_pons':
-      case 'medulla_oblongata':
-      case 'brainstem_medulla':
-        return [0, 0, 0];
-      default:
-        return [0, 0, 0];
-    }
-  };
-
-  // Get regions to display
-  const getRegionsToDisplay = () => {
-    if (showSubparts && selectedMainRegion) {
-      return getParts(selectedMainRegion);
-    } else {
-      return getMainRegions();
-    }
-  };
-
-  const regionsToDisplay = getRegionsToDisplay();
-
-  return (
-    <group>
-      {regionsToDisplay.map((region) => (
-        <mesh
-          key={region.id}
-          position={region.position}
-          rotation={getRotation(region.id)}
-          onClick={(e) => {
-            e.stopPropagation();
-            onRegionClick(region);
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            setHovered(region);
-          }}
-          onPointerOut={() => setHovered(null)}
-          castShadow
-          receiveShadow
-        >
-          <RealisticBrainMesh
-            region={region}
-            isHovered={hovered?.id === region.id}
-            isSelected={selectedRegion?.id === region.id}
-          />
-          {hovered?.id === region.id && (
-            <Html distanceFactor={10}>
-              <div className="brain-tooltip">
-                <div className="tooltip-type" style={{ color: region.color }}>
-                  {region.type}
-                </div>
-                <div className="tooltip-name">{region.name}</div>
-              </div>
-            </Html>
-          )}
-        </mesh>
-      ))}
-    </group>
-  );
-}
 
 // Main App Component
 function App() {
@@ -214,7 +127,10 @@ function App() {
       {/* Breadcrumb Navigation */}
       <div className="breadcrumb-nav">
         <div className="breadcrumb-content">
-          <h1 className="app-title">Mind Map</h1>
+          <h1 className="app-title">
+            <img src="/mindmap.svg" alt="Mind Map Logo" className="app-logo" />
+            Mind Map
+          </h1>
           {selectedRegion && (
             <div className="breadcrumb-path">
               <button
@@ -247,14 +163,15 @@ function App() {
       {/* 3D Canvas */}
       <div className="canvas-container">
         <Canvas
-          camera={{ position: [0, 0, 10], fov: 50 }}
+          camera={{ position: [0, 0, 5], fov: 65 }}
           shadows
           gl={{ antialias: true, alpha: true }}
+          style={{ width: '100%', height: '100%' }}
         >
-          <ambientLight intensity={0.4} />
+          <ambientLight intensity={0.6} />
           <directionalLight
-            position={[10, 10, 10]}
-            intensity={1.2}
+            position={[5, 5, 5]}
+            intensity={1.5}
             castShadow
             shadow-mapSize-width={2048}
             shadow-mapSize-height={2048}
@@ -264,42 +181,38 @@ function App() {
             shadow-camera-top={10}
             shadow-camera-bottom={-10}
           />
-          <directionalLight position={[-5, 5, -5]} intensity={0.6} color="#8080ff" />
-          <directionalLight position={[5, -5, 5]} intensity={0.4} color="#ff8080" />
+          <directionalLight position={[-5, 5, 5]} intensity={0.8} />
+          <directionalLight position={[0, -5, 5]} intensity={0.5} />
           <hemisphereLight
             skyColor="#ffffff"
-            groundColor="#444444"
-            intensity={0.5}
-          />
-          <pointLight position={[0, 10, 0]} intensity={0.5} color="#ffffff" />
-          <pointLight position={[0, -10, 0]} intensity={0.3} color="#4444ff" />
-          <spotLight
-            position={[15, 15, 15]}
-            angle={0.3}
-            penumbra={1}
-            intensity={0.8}
-            castShadow
+            groundColor="#666666"
+            intensity={0.6}
           />
           <Environment preset="studio" />
           <fog attach="fog" args={['#1a1a2e', 15, 30]} />
 
           <Suspense fallback={null}>
-            <BrainModel
+            <GltfBrainModel
               onRegionClick={handleRegionClick}
               selectedRegion={selectedRegion}
               selectedMainRegion={selectedMainRegion}
               showSubparts={showSubparts}
             />
           </Suspense>
-          <OrbitControls
-            autoRotate={autoRotate}
-            autoRotateSpeed={1.5}
+          <KeyboardOrbitControls
+            autoRotate={false}
             enableDamping
             dampingFactor={0.08}
-            minDistance={5}
-            maxDistance={20}
-            enablePan={true}
-            maxPolarAngle={Math.PI}
+            minDistance={2}
+            maxDistance={12}
+            enablePan={false}
+            maxPolarAngle={Math.PI - 0.1}
+            minPolarAngle={0.1}
+            target={[0, 0, 0]}
+            enableZoom={true}
+            zoomSpeed={0.8}
+            enableRotate={true}
+            rotateSpeed={0.5}
           />
         </Canvas>
       </div>
