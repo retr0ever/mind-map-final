@@ -37,6 +37,9 @@ export function KeyboardOrbitControls(props) {
   useFrame(() => {
     if (!controlsRef.current) return;
 
+    // Lock the target to the center to prevent any drift
+    controlsRef.current.target.set(0, 0, 0);
+
     const rotationSpeed = 0.02;
     let azimuthChange = 0;
     let polarChange = 0;

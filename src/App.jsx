@@ -1,10 +1,9 @@
 import { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
+import { Environment, OrbitControls } from '@react-three/drei';
 import './App.css';
 import { brainStructure, getMainRegions, getParts } from './data/brainStructure';
 import { GltfBrainModel } from './components/GltfBrainModel';
-import { KeyboardOrbitControls } from './components/KeyboardOrbitControls';
 import { fetchRelevantLinks } from './services/perplexityService';
 
 // Main App Component
@@ -163,7 +162,7 @@ function App() {
       {/* 3D Canvas */}
       <div className="canvas-container">
         <Canvas
-          camera={{ position: [0, 0, 5], fov: 65 }}
+          camera={{ position: [0, 0, 30], fov: 50 }}
           shadows
           gl={{ antialias: true, alpha: true }}
           style={{ width: '100%', height: '100%' }}
@@ -199,20 +198,20 @@ function App() {
               showSubparts={showSubparts}
             />
           </Suspense>
-          <KeyboardOrbitControls
-            autoRotate={false}
-            enableDamping
-            dampingFactor={0.08}
-            minDistance={2}
-            maxDistance={12}
+
+          {/* OrbitControls - rotation only, no panning */}
+          <OrbitControls
+            makeDefault
             enablePan={false}
-            maxPolarAngle={Math.PI - 0.1}
-            minPolarAngle={0.1}
-            target={[0, 0, 0]}
             enableZoom={true}
-            zoomSpeed={0.8}
             enableRotate={true}
+            minDistance={10}
+            maxDistance={50}
+            zoomSpeed={0.8}
             rotateSpeed={0.5}
+            target={[0, 0, 0]}
+            enableDamping={true}
+            dampingFactor={0.05}
           />
         </Canvas>
       </div>
@@ -431,7 +430,7 @@ function App() {
                   <div className="info-welcome-guide">
                     <h4>Navigation Guide</h4>
                     <ul>
-                      <li>Drag to rotate the brain</li>
+                      <li>Drag to twist and turn the brain</li>
                       <li>Scroll to zoom in and out</li>
                       <li>Click a region to explore its parts</li>
                       <li>Use search to find specific structures</li>

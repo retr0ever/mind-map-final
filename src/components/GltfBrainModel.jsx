@@ -30,14 +30,14 @@ export function GltfBrainModel({
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      // Base scale
-      let newScale = 0.12;
+      // Base scale - reduced to make brain smaller
+      let newScale = 0.06;
 
       // Adjust for smaller screens
       if (width < 768) {
-        newScale = 0.10;
+        newScale = 0.05;
       } else if (width < 1024) {
-        newScale = 0.11;
+        newScale = 0.055;
       }
 
       // Adjust for very tall or very wide screens
@@ -56,9 +56,13 @@ export function GltfBrainModel({
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
-  // Extract all meshes from the loaded model
+  // Extract all meshes from the loaded model and center it
   useEffect(() => {
     if (scene) {
+      // Center the scene
+      const box = new THREE.Box3().setFromObject(scene);
+      const center = box.getCenter(new THREE.Vector3());
+
       const extractedMeshes = [];
       scene.traverse((child) => {
         if (child.isMesh) {
@@ -72,6 +76,9 @@ export function GltfBrainModel({
             clonedMesh.userData.originalMaterial = child.material.clone();
           }
 
+          // Offset mesh position to center the entire model at origin
+          clonedMesh.position.sub(center);
+
           clonedMesh.castShadow = true;
           clonedMesh.receiveShadow = true;
           extractedMeshes.push(clonedMesh);
@@ -80,6 +87,7 @@ export function GltfBrainModel({
       setMeshes(extractedMeshes);
       setModelLoaded(true);
       console.log(`Loaded brain model with ${extractedMeshes.length} meshes`);
+      console.log(`Brain centered at origin. Original center was:`, center);
 
       // Log mesh names for debugging and analysis
       console.log('=== Brain Model Loaded ===');
